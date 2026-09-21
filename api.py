@@ -19,7 +19,7 @@ def cf_access_headers() -> Dict[str, str]:
     """Return Cloudflare Access headers from env vars, if configured."""
     headers = {}
     client_id = os.getenv("CF_ACCESS_CLIENT_ID")
-    client_secret = os.getenv("CF_ACCES_CLIENT_SECRET")
+    client_secret = os.getenv("CF_ACCESS_CLIENT_SECRET")
     if client_id:
         headers["CF-Access-Client-Id"] = client_id
     if client_secret:
