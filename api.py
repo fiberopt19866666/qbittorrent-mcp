@@ -6,6 +6,7 @@ import asyncio
 from typing import Dict, List, Union, Optional
 
 from dotenv import load_dotenv
+import sys
 
 load_dotenv()
 
@@ -467,7 +468,7 @@ async def get_application_version_api(
             if response.status_code == 200:
                 return response.text.strip()
             else:
-                print(response.text.strip())
+                print(f"{response.text.strip()}", file=sys.stderr)
                 return f"Failed to get qBittorrent version: status code {response.status_code}"
     except Exception as e:
         return f"Error: {str(e)}"
@@ -894,4 +895,3 @@ async def search_torrents_api(
 
     except Exception as e:
         return json.dumps({"error": f"错误: {str(e)}"})
-
