@@ -45,8 +45,7 @@ async def login_to_qbittorrent(username, password, host):
             data={"username": username, "password": password},
         )
         print(f"Content: {response.json()}", file=sys.stderr)
-        print(f"URL: {response.url}")
-        print(f"Text: {response.text}")
+        print(f"Headers: {response.json()}", file=sys.stderr)
         # qBittorrent v5.x 返回 204，v4.x 返回 200
         if response.status_code in (200, 204):
             return response.cookies
