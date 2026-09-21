@@ -5,9 +5,24 @@ import base64
 import asyncio
 from typing import Dict, List, Union, Optional
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 # 搜索相关常量
 SEARCH_MAX_RETRIES = 10
 SEARCH_RETRY_DELAY_SECONDS = 1.0
+
+def cf_access_headers() -> Dict[str, str]:
+    """Return Cloudflare Access headers from env vars, if configured."""
+    headers = {}
+    client_id = os.getenv("CF_CLIENT_ID")
+    client_secret = os.getenv("CF_CLIENT_SECRET")
+    if client_id:
+        headers["CF-Access-Client-Id"] = client_id
+    if client_secret:
+        headers["CF-Access-Client-Secret"] = client_secret
+    return headers
 
 async def login_to_qbittorrent(username, password, host):
     """
@@ -21,7 +36,7 @@ async def login_to_qbittorrent(username, password, host):
     Returns:
         Returns object containing session cookie on success, None on failure
     """
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(headers=cf_access_headers()) as client:
         response = await client.post(
             f"{host}/api/v2/auth/login",
             data={"username": username, "password": password}
@@ -72,7 +87,7 @@ async def add_torrent_api(query: str, host: str, username: str, password: str) -
             return "Error: No torrent file path provided"
         
         results = []
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(headers=cf_access_headers()) as client:
             for file_path in file_paths:
                 if not os.path.exists(file_path):
                     results.append(f"File does not exist: {file_path}")
@@ -145,7 +160,7 @@ async def delete_torrent_api(hashes: str, delete_files: bool = False, host: str 
             "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
         }
         
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(headers=cf_access_headers()) as client:
             # Use data parameter instead of json parameter
             response = await client.post(
                 f"{host}/api/v2/torrents/delete",
@@ -196,7 +211,7 @@ async def pause_torrent_api(hashes: str, host: str = '', username: str = '', pas
         }
         
         
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(headers=cf_access_headers()) as client:
             response = await client.post(
                 f"{host}/api/v2/torrents/stop",
                 data=params,
@@ -239,7 +254,7 @@ async def resume_torrent_api(hashes: str, host: str = '', username: str = '', pa
             "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
         }
         
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(headers=cf_access_headers()) as client:
             response = await client.post(
                 f"{host}/api/v2/torrents/start",
                 data=params,
@@ -281,7 +296,7 @@ async def get_torrent_trackers_urls(hash: str, host: str = '', username: str = '
             "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
         }
 
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(headers=cf_access_headers()) as client:
             try:
                 response = await client.get(
                     f"{host}/api/v2/torrents/trackers",
@@ -342,7 +357,7 @@ async def set_global_download_limit_api(limit: int, host: str = '', username: st
             "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
         }
         
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(headers=cf_access_headers()) as client:
             response = await client.post(
                 f"{host}/api/v2/transfer/setDownloadLimit",
                 data=params,
@@ -381,7 +396,7 @@ async def set_global_upload_limit_api(limit: int, host: str = '', username: str 
             "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
         }
 
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(headers=cf_access_headers()) as client:
             response = await client.post(
                 f"{host}/api/v2/transfer/setUploadLimit",
                 data=params,
@@ -409,7 +424,7 @@ async def get_application_version_api(host: str = '', username: str = '', passwo
             "Accept": "*/*",
         }
         
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(headers=cf_access_headers()) as client:
             response = await client.get(
                 f"{host}/api/v2/app/version",
                 cookies=cookies,
@@ -456,7 +471,7 @@ async def set_file_priority_api(hash: str, id: str, priority: int, host: str = '
             "Accept": "*/*",
             "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"}
         
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(headers=cf_access_headers()) as client:
             response = await client.post(
                 f"{host}/api/v2/torrents/filePrio",
                 data=params,
@@ -494,7 +509,7 @@ async def set_torrent_download_limit_api(hash: str, limit: int, host: str = '', 
             "Content-Type": "application/x-www-form-urlencoded",
         }
         
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(headers=cf_access_headers()) as client:
             response = await client.post(
                 f"{host}/api/v2/torrents/setDownloadLimit",
                 data=params,
@@ -533,7 +548,7 @@ async def set_torrent_upload_limit_api(hash: str, limit: int, host: str = '', us
             "Content-Type": "application/x-www-form-urlencoded",
         }
         
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(headers=cf_access_headers()) as client:
             response = await client.post(
                 f"{host}/api/v2/torrents/setUploadLimit",
                 data=params,
@@ -574,7 +589,7 @@ async def add_trackers_to_torrent_api(hash: str, trackers: str, host: str = '', 
             "Content-Type": "application/x-www-form-urlencoded"
         }
         
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(headers=cf_access_headers()) as client:
             response = await client.post(
                 f"{host}/api/v2/torrents/addTrackers",
                 data=params,
@@ -615,7 +630,7 @@ async def add_torrent_tags_api(hash: str, tags: str, host: str = '', username: s
             "Content-Type": "application/x-www-form-urlencoded"
         }
         
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(headers=cf_access_headers()) as client:
             response = await client.post(
                 f"{host}/api/v2/torrents/addTags",
                 data=params,
@@ -641,7 +656,7 @@ async def get_torrent_list_api(host: str = '', username: str = '', password: str
         }
         
         
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(headers=cf_access_headers()) as client:
             response = await client.get(
                 f"{host}/api/v2/torrents/info",
                 cookies=cookies,
@@ -721,7 +736,7 @@ async def search_torrents_api(
             "plugins": plugins
         }
         
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(headers=cf_access_headers()) as client:
             # 启动搜索
             response = await client.post(
                 f"{host}/api/v2/search/start",
