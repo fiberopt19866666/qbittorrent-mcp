@@ -1,4 +1,4 @@
-# qqBittorrent MCP Service.
+# qqBittorrent MCP Service
 
 qBittorrent MCP is a service based on FastMCP that provides functional interfaces for interacting with the qBittorrent WebUI API.
 
