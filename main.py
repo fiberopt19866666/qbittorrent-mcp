@@ -1,5 +1,5 @@
 import httpx
-from mcp.server import FastMCP
+from fastmcp import FastMCP
 import base64
 import os
 import json
@@ -29,7 +29,7 @@ DEFAULT_USERNAME = os.environ.get('QBITTORRENT_USERNAME') or 'admin'
 DEFAULT_PASSWORD = os.environ.get('QBITTORRENT_PASSWORD') or 'adminadmin'
 
 # Initialize FastMCP server
-app = FastMCP('qbittorrent')
+mcp = FastMCP('qbittorrent')
 
 @app.tool()
 async def add_torrent(query: str) -> str:
@@ -256,4 +256,4 @@ async def search_torrents(
     )
 
 if __name__ == "__main__":
-    app.run(transport='stdio')
+    mcp.run()
