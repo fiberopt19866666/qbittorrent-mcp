@@ -31,7 +31,7 @@ DEFAULT_PASSWORD = os.environ.get('QBITTORRENT_PASSWORD') or 'adminadmin'
 # Initialize FastMCP server
 mcp = FastMCP('qbittorrent')
 
-@app.tool()
+@mcp.tool()
 async def add_torrent(query: str) -> str:
     """
     Add torrent files to qBittorrent
@@ -47,7 +47,7 @@ async def add_torrent(query: str) -> str:
     """
     return await add_torrent_api(query, DEFAULT_HOST, DEFAULT_USERNAME, DEFAULT_PASSWORD)
 
-@app.tool()
+@mcp.tool()
 async def delete_torrent(hashes: str, delete_files: bool = False) -> str:
     """
     Delete torrents from qBittorrent
@@ -61,7 +61,7 @@ async def delete_torrent(hashes: str, delete_files: bool = False) -> str:
     """
     return await delete_torrent_api(hashes, delete_files, DEFAULT_HOST, DEFAULT_USERNAME, DEFAULT_PASSWORD)
 
-@app.tool()
+@mcp.tool()
 async def pause_torrent(hashes: str) -> str:
     """
     Pause torrents
@@ -74,7 +74,7 @@ async def pause_torrent(hashes: str) -> str:
     """
     return await pause_torrent_api(hashes, DEFAULT_HOST, DEFAULT_USERNAME, DEFAULT_PASSWORD)
 
-@app.tool()
+@mcp.tool()
 async def resume_torrent(hashes: str) -> str:
     """
     Resume torrents
@@ -87,7 +87,7 @@ async def resume_torrent(hashes: str) -> str:
     """
     return await resume_torrent_api(hashes, DEFAULT_HOST, DEFAULT_USERNAME, DEFAULT_PASSWORD)
 
-@app.tool()
+@mcp.tool()
 async def get_torrent_trackers(hash: str) -> str:
     """
     Get torrent trackers
@@ -100,7 +100,7 @@ async def get_torrent_trackers(hash: str) -> str:
     """
     return await get_torrent_trackers_urls(hash, DEFAULT_HOST, DEFAULT_USERNAME, DEFAULT_PASSWORD)
 
-@app.tool()
+@mcp.tool()
 async def set_global_download_limit(limit: int) -> str:
     """
     Set global download speed limit
@@ -113,7 +113,7 @@ async def set_global_download_limit(limit: int) -> str:
     """ 
     return await set_global_download_limit_api(limit, host=DEFAULT_HOST, username=DEFAULT_USERNAME, password=DEFAULT_PASSWORD)
 
-@app.tool()
+@mcp.tool()
 async def set_global_upload_limit(limit: int) -> str:
     """
     Set global upload speed limit
@@ -126,7 +126,7 @@ async def set_global_upload_limit(limit: int) -> str:
     """
     return await set_global_upload_limit_api(limit, host=DEFAULT_HOST, username=DEFAULT_USERNAME, password=DEFAULT_PASSWORD)
 
-@app.tool()
+@mcp.tool()
 async def get_application_version() -> str:
     """
     Get qBittorrent version
@@ -136,7 +136,7 @@ async def get_application_version() -> str:
     """
     return await get_application_version_api(host=DEFAULT_HOST, username=DEFAULT_USERNAME, password=DEFAULT_PASSWORD)
 
-@app.tool()
+@mcp.tool()
 async def set_file_priority(hash: str, id: str, priority: int) -> str:
     """
     Set file priority
@@ -163,7 +163,7 @@ async def set_file_priority(hash: str, id: str, priority: int) -> str:
     """ 
     return await set_file_priority_api(hash, id, priority, DEFAULT_HOST, DEFAULT_USERNAME, DEFAULT_PASSWORD)
 
-@app.tool()
+@mcp.tool()
 async def set_torrent_download_limit(hash: str, limit: int) -> str:
     """
     Set torrent download speed limit
@@ -177,7 +177,7 @@ async def set_torrent_download_limit(hash: str, limit: int) -> str:
     """
     return await set_torrent_download_limit_api(hash, limit, DEFAULT_HOST, DEFAULT_USERNAME, DEFAULT_PASSWORD)
 
-@app.tool()
+@mcp.tool()
 async def set_torrent_upload_limit(hash: str, limit: int) -> str:
     """
     Set torrent upload speed limit
@@ -191,7 +191,7 @@ async def set_torrent_upload_limit(hash: str, limit: int) -> str:
     """ 
     return await set_torrent_upload_limit_api(hash, limit, DEFAULT_HOST, DEFAULT_USERNAME, DEFAULT_PASSWORD)
 
-@app.tool()
+@mcp.tool()
 async def add_trackers_to_torrent(hash: str, trackers: str) -> str:
     """
     Add trackers to torrent
@@ -205,7 +205,7 @@ async def add_trackers_to_torrent(hash: str, trackers: str) -> str:
     """
     return await add_trackers_to_torrent_api(hash, trackers, DEFAULT_HOST, DEFAULT_USERNAME, DEFAULT_PASSWORD)
 
-@app.tool()
+@mcp.tool()
 async def add_torrent_tags(hash: str, tags: str) -> str:
     """
     Add torrent tags
@@ -219,14 +219,14 @@ async def add_torrent_tags(hash: str, tags: str) -> str:
     """
     return await add_torrent_tags_api(hash, tags, DEFAULT_HOST, DEFAULT_USERNAME, DEFAULT_PASSWORD)
 
-@app.tool()
+@mcp.tool()
 async def get_torrent_list() -> str:
     """
     Get torrent list
     """
     return await get_torrent_list_api(host=DEFAULT_HOST, username=DEFAULT_USERNAME, password=DEFAULT_PASSWORD)
 
-@app.tool()
+@mcp.tool()
 async def search_torrents(
     pattern: str,
     category: str = 'all',
